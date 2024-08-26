@@ -1,108 +1,95 @@
-function saveOptions(e) {
-  e.preventDefault();
-  browser.storage.local.set({
-    scrollkey_scrollvalue: document.querySelector("#scrollkey_scrollvalue").value
-  });
-  browser.storage.local.set({
-    scrollkey_scrollvalue_shift: document.querySelector("#scrollkey_scrollvalue_shift").value
-  });
-  browser.storage.local.set({
-    scrollkey_scrollvalue_alt: document.querySelector("#scrollkey_scrollvalue_alt").value
-  });
-  browser.storage.local.set({
-    scrollkey_horizontal_scroll: document.querySelector("#scrollkey_horizontal_scroll").checked
-  });
-  browser.storage.local.set({
-    scrollkey_horizontal_scroll_shift: document.querySelector("#scrollkey_horizontal_scroll_shift").checked
-  });
-  browser.storage.local.set({
-    scrollkey_horizontal_scroll_alt: document.querySelector("#scrollkey_horizontal_scroll_alt").checked
-  });
-  browser.storage.local.set({
-    scrollkey_scroll_pagedown_pageup: document.querySelector("#scrollkey_scroll_pagedown_pageup").checked
-  });
+const PREFS = {
+	"scrollkey_scrollvaluedown": {
+		"type": "value",
+		"default": 74
+	},
+	"scrollkey_scrollvalueup": {
+		"type": "value",
+		"default": 75
+	},
+	"scrollkey_scrollvalue": {
+		"type": "value",
+		"default": 400
+	},
+	"scrollkey_scrollvalue_shift": {
+		"type": "value",
+		"default": 400
+	},
+	"scrollkey_scrollvalue_alt": {
+		"type": "value",
+		"default": 400
+	},
+	"scrollkey_horizontal_scroll": {
+		"type": "checked",
+		"default": false
+	},
+	"scrollkey_horizontal_scroll_shift": {
+		"type": "checked",
+		"default": false
+	},
+	"scrollkey_horizontal_scroll_alt": {
+		"type": "checked",
+		"default": false
+	},
+	"scrollkey_scroll_pagedown_pageup": {
+		"type": "checked",
+		"default": false
+	},
+	"scrollkey_blacklist": {
+		"type": "value",
+		"default": ""
+	},
+	"scrollkey_smooth_scrolling": {
+		"type": "checked",
+		"default": false
+	}
+};
+
+function saveOptions(){
+	const values = {};
+	for(let p in PREFS) {
+		values[p] = document.getElementById(p)[PREFS[p].type];
+	}
+
+	browser.storage.sync.set(values).then(() => browser.runtime.sendMessage({action: "notify", data: browser.i18n.getMessage("notify_preferences_saved")}));
 }
 
 function restoreOptions() {
-
-  function setScrollValue(result) {
-    document.querySelector("#scrollkey_scrollvalue").value = value(result) || 400;
-  }
-  
-  function setScrollValueShift(result) {
-	document.querySelector("#scrollkey_scrollvalue_shift").value = value(result) || 400;
-  }
-  
-  function setScrollValueAlt(result) {
-	document.querySelector("#scrollkey_scrollvalue_alt").value = value(result) || 400;
-  }
-  
-  function setHorizontalScroll(result) {
-    document.querySelector("#scrollkey_horizontal_scroll").checked = value(result) || false;
-  }
-  
-  function setHorizontalScrollShift(result) {
-	document.querySelector("#scrollkey_horizontal_scroll_shift").checked = value(result) || false;
-  }
-  
-  function setHorizontalScrollAlt(result) {
-	document.querySelector("#scrollkey_horizontal_scroll_alt").checked = value(result) || false;
-  }
-  
-  function setScrollPageDownPageUp(result){
-  	document.querySelector("#scrollkey_scroll_pagedown_pageup").checked = value(result) || false;
-  }
-
-  function onError(error) {
-    console.log('Error: ${error}');
-  }
-
-  function value(result){
-	for(var key in result) {
-	  if(result.hasOwnProperty(key)) {
-        return result[key];
-	  }
-	}
-	return undefined;
-  }
-  
-  var getting1 = browser.storage.local.get("scrollkey_scrollvalue");
-  getting1.then(setScrollValue, onError);
-  
-  var getting2 = browser.storage.local.get("scrollkey_scrollvalue_shift");
-  getting2.then(setScrollValueShift, onError);
-  
-  var getting3 = browser.storage.local.get("scrollkey_scrollvalue_alt");
-  getting3.then(setScrollValueAlt, onError);
-  
-  var getting4 = browser.storage.local.get("scrollkey_horizontal_scroll");
-  getting4.then(setHorizontalScroll, onError);
-  
-  var getting5 = browser.storage.local.get("scrollkey_horizontal_scroll_shift");
-  getting5.then(setHorizontalScrollShift, onError);
-  
-  var getting6 = browser.storage.local.get("scrollkey_horizontal_scroll_alt");
-  getting6.then(setHorizontalScrollAlt, onError);
-  
-  var getting7 = browser.storage.local.get("scrollkey_scroll_pagedown_pageup");
-  getting7.then(setScrollPageDownPageUp, onError);
+	browser.storage.sync.get(Object.keys(PREFS)).then((result) => {
+		let val;
+		for(let p in PREFS) {
+			if(p in result) {
+				val = result[p];
+			}
+			else {
+				val = PREFS[p].default;
+			}
+			document.getElementById(p)[PREFS[p].type] = val;
+		}
+	}).catch(console.error);
 }
 
-function i18n() {
-  document.querySelector("#scrollvalue").innerHTML = browser.i18n.getMessage("scrollvalue"); // "Scrollwaarde";
-  document.querySelector("#pagedownpageup").innerHTML = browser.i18n.getMessage("pagedownpageup"); // "PageDown en PageUp scrollen de waarde zoals hierboven aangegeven";
-  document.querySelector("#horizontalscroll").innerHTML = browser.i18n.getMessage("horizontalscroll"); // "Gebruik de sneltoets hierboven voor horizontaal scrollen";
-  document.querySelector("#scrollvalueshift").innerHTML = browser.i18n.getMessage("scrollvalueshift"); // "Scrollwaarde (Shift)";
-  document.querySelector("#horizontalscrollshift").innerHTML = browser.i18n.getMessage("horizontalscroll"); // "Gebruik de sneltoets hierboven voor horizontaal scrollen";
-  document.querySelector("#scrollvaluealt").innerHTML = browser.i18n.getMessage("scrollvaluealt"); // "Scrollwaarde (Alt)";
-  document.querySelector("#horizontalscrollalt").innerHTML = browser.i18n.getMessage("horizontalscroll"); // "Gebruik de sneltoets hierboven voor horizontaal scrollen";
-  document.querySelector("#savepreferences").innerHTML = browser.i18n.getMessage("savepreferences"); // "Voorkeuren opslaan";
+function i18n(){
+	var i18nElements = document.querySelectorAll('[data-i18n]');
+
+	for(let i in i18nElements){
+		try{
+			if(i18nElements[i].getAttribute == null)
+				continue;
+			i18n_attrib = i18nElements[i].getAttribute("data-i18n");
+			i18nElements[i].textContent = browser.i18n.getMessage(i18n_attrib);
+		}catch(ex){
+			console.error("i18n id " + IDS[id] + " not found");
+		}
+	}
 }
 
 function init(){
 	restoreOptions();
 	i18n();
+	document.querySelector("form").style.display = "block";
+	document.querySelector(".refreshOptions").style.display = "none";
 }
 
-document.addEventListener("DOMContentLoaded", init);
-document.querySelector("form").addEventListener("submit", saveOptions);
+window.addEventListener("DOMContentLoaded", init, { passive: true });
+document.querySelector("form").addEventListener("submit", (e) => { e.preventDefault(); saveOptions(); }, { passive: false });

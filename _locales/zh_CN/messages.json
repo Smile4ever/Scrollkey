@@ -1,38 +1,38 @@
 {
   "extensionDescription": {
-    "message": "Faire défiler les pages dans le style VIM avec les raccourcis j et k.",
-    "description": "Déscription de l'extension."
+    "message": "以 VIM 式 j 和 k 键滚动页面。",
+    "description": "Description of the extension."
   },
   "scrollvalue": {
-    "message": "Valeur de défilement",
+    "message": "滚动值",
     "description": ""
   },
   "scrollvalueshift": {
-    "message": "Valeur de défilement (Maj)",
+    "message": "滚动值 (按住 Shift)",
     "description": ""
   },
   "scrollvaluealt": {
-    "message": "Valeur de défilement (Alt)",
+    "message": "滚动值 (按住 Alt)",
     "description": ""
   },
   "pixels": {
-    "message": "pixels",
+    "message": "像素",
     "description": ""
   },
   "pagedownpageup": {
-    "message": "PageDown et PageUp défile la valeur indiquée ci-dessus",
+    "message": "PageDown 和 PageUp 键的滚动也采用上述值",
     "description": ""
   },
   "horizontalscroll": {
-    "message": "Utilisez la touche de raccourci J/K pour le défilement horizontal",
+    "message": "使用 J/K 键操控水平滚动",
     "description": ""
   },
   "horizontalscrollshift": {
-    "message": "Utilisez la touche de raccourci Maj+J/Maj+K pour le défilement horizontal",
+    "message": "使用 Shift+J/Shift+K 键操控水平滚动",
     "description": ""
   },
   "horizontalscrollalt": {
-    "message": "Utilisez la touche de raccourci Alt+J/Alt+K pour le défilement horizontal",
+    "message": "使用 Alt+J/Alt+K 键操控水平滚动",
     "description": ""
   },
   "smoothscrolling": {
@@ -56,19 +56,19 @@
     "description": ""
   },
   "savepreferences": {
-    "message": "Enregistrer les préférences",
+    "message": "保存设置",
     "description": ""
   },
   "notify_preferences_saved": {
-    "message": "Préférences enregistrés",
+	"message": "设置已保存",
     "description": ""
   },
   "notify_tip_horizontal": {
-	"message": "This page cannot be scrolled horizontally. Change the preferences to scroll vertically or try another shortcut.",
+	"message": "此页面无法水平滚动。将首选项更改为垂直滚动或尝试配置其他快捷键。",
 	"description": ""
   },
   "notify_tip_vertical": {
-	"message": "This page cannot be scrolled vertically. Change the preferences to scroll horizontally or try another shortcut.",
+	"message": "此页面无法垂直滚动。将首选项更改为垂直滚动或尝试配置其他快捷键。",
 	"description": ""
   }
 }
